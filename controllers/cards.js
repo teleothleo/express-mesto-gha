@@ -25,37 +25,34 @@ module.exports.createCard = (req, res) => {
     .catch((err) => res.status(400).send({ name: err.name, message: err.message }));
 };
 
-module.exports.deleteCard = (req, res) => {
-  const { cardId } = req.params;
-  console.log(cardId);
-  return Card.findById(cardId)
-    .then((card) => {
-      if (!card) {
-        res.status(500).send({ message: 'Server-side error' });
-        return;
-      }
-      card.remove().then(() => res.send({ message: 'Card was deleted successfully' }));
-    })
-    .catch((err) => res.status(404).send({ name: err.name, message: err.message }));
-};
+module.exports.deleteCard = (req, res) => Card.findById(req.params.cardId)
+  .then((card) => {
+    if (!card) {
+      res.status(404).send({ message: 'Card not found' });
+      return;
+    }
+    card.remove().then(() => res.send({ message: 'Card was deleted successfully' }));
+  })
+  .catch((err) => {
+    if (req.params.cardId.length !== 24) {
+      res.status(400).send({ message: 'Incorrect card ID' });
+    } else {
+      res.status(500).send({ name: err.name, message: err.message });
+    }
+  });
 
 module.exports.likeCard = (req, res) => {
-  console.log(req.params.cardId);
-  return Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $addToSet: { likes: req.user._id } },
-    { new: true },
-  )
-    .then(() => {
-      if (!req.user._id) {
-        res.status(400).send({ message: 'Incorrect user data' });
+  Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
+    .then((card) => {
+      if (!card) {
+        res.status(404).send({ message: 'Card not found' });
         return;
       }
-      res.status(200).send({ message: 'Card liked!' });
+      res.status(200).send(card);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(404).send({ name: err.name, message: err.message });
+      if (req.params.cardId.length !== 24) {
+        res.status(400).send({ message: 'Incorrect card ID' });
       } else {
         res.status(500).send({ name: err.name, message: err.message });
       }
@@ -63,22 +60,17 @@ module.exports.likeCard = (req, res) => {
 };
 
 module.exports.dislikeCard = (req, res) => {
-  console.log(req.params.cardId);
-  return Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $pull: { likes: req.user._id } },
-    { new: true },
-  )
-    .then(() => {
-      if (!req.user._id) {
-        res.status(400).send({ message: 'Incorrect user data' });
+  Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
+    .then((card) => {
+      if (!card) {
+        res.status(404).send({ message: 'Card not found' });
         return;
       }
-      res.status(200).send({ message: 'Card disliked!' });
+      res.status(200).send(card);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(404).send({ name: err.name, message: err.message });
+      if (req.params.cardId.length !== 24) {
+        res.status(400).send({ message: 'Incorrect card ID' });
       } else {
         res.status(500).send({ name: err.name, message: err.message });
       }

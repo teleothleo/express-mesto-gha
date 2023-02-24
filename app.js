@@ -26,5 +26,6 @@ async function connect() {
 
 connect();
 
+app.use('/', require('./routes/index'));
 app.use('/cards', require('./routes/cards'));
 app.use('/users', require('./routes/users'));
