@@ -1,8 +1,7 @@
 const router = require('express').Router();
 
-const { showFalsePath } = require('../controllers/index');
-
-router.get('/404', showFalsePath);
-router.patch('/404', showFalsePath);
+router.use((req, res) => {
+  res.status(404).send({ message: 'No page here' });
+});
 
 module.exports = router;
