@@ -14,6 +14,8 @@ module.exports.getUserById = (req, res) => {
     .then((user) => {
       if (!user) {
         res.status(500).send({ message: 'Server-side error' });
+      } else if (userId.length !== 24) {
+        res.status(400).send({ message: 'Incorrect user ID' });
       }
       res.send(user);
     })
@@ -38,10 +40,10 @@ module.exports.createUser = (req, res) => {
 
 module.exports.updateUser = (req, res) => {
   console.log(req.body);
-  const { name, about, avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about, avatar })
+  const { name, about } = req.body;
+  User.findByIdAndUpdate(req.user._id, { name, about })
     .then((user) => {
-      if (!name || !about || !avatar) {
+      if (!name || !about) {
         res.status(400).send({ message: 'Wrong keys or not all fiels are filled out' });
         return;
       }
@@ -61,9 +63,7 @@ module.exports.updateUserAvatar = (req, res) => {
   User.findByIdAndUpdate(req.user._id, { avatar })
     .then((user) => {
       if (!avatar) {
-        res
-          .status(400)
-          .send({ message: 'Wrong "avatar" key or "avatar" key is not filled out' });
+        res.status(400).send({ message: 'Wrong "avatar" key or "avatar" key is not filled out' });
         return;
       }
       res.status(200).send(user);
