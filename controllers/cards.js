@@ -7,7 +7,7 @@ module.exports.getCards = (req, res) => {
       console.log(cards);
       res.send(cards);
     })
-    .catch((err) => res.status(500).send({ ErrorName: err.name, message: err.message }));
+    .catch((err) => res.status(500).send({ name: err.name, message: err.message }));
 };
 
 module.exports.createCard = (req, res) => {
@@ -17,12 +17,12 @@ module.exports.createCard = (req, res) => {
   Card.create({ name, link, owner })
     .then((card) => {
       if (!card) {
-        res.status(500).send({ ErrorMessage: 'Server-side error' });
+        res.status(500).send({ message: 'Server-side error' });
         return;
       }
       res.send(card);
     })
-    .catch((err) => res.status(400).send({ ErrorName: err.name, message: err.message }));
+    .catch((err) => res.status(400).send({ name: err.name, message: err.message }));
 };
 
 module.exports.deleteCard = (req, res) => {
@@ -31,12 +31,12 @@ module.exports.deleteCard = (req, res) => {
   return Card.findById(cardId)
     .then((card) => {
       if (!card) {
-        res.status(500).send({ ErrorMessage: 'Server-side error' });
+        res.status(500).send({ message: 'Server-side error' });
         return;
       }
       card.remove().then(() => res.send({ message: 'Card was deleted successfully' }));
     })
-    .catch((err) => res.status(404).send({ ErrorName: err.name, message: err.message }));
+    .catch((err) => res.status(404).send({ name: err.name, message: err.message }));
 };
 
 module.exports.likeCard = (req, res) => {
@@ -53,9 +53,9 @@ module.exports.likeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(404).send({ ErrorName: err.name, message: err.message });
+        res.status(404).send({ name: err.name, message: err.message });
       } else {
-        res.status(500).send({ ErrorName: err.name, message: err.message });
+        res.status(500).send({ name: err.name, message: err.message });
       }
     });
 };
@@ -74,9 +74,9 @@ module.exports.dislikeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(404).send({ ErrorName: err.name, message: err.message });
+        res.status(404).send({ name: err.name, message: err.message });
       } else {
-        res.status(500).send({ ErrorName: err.name, message: err.message });
+        res.status(500).send({ name: err.name, message: err.message });
       }
     });
 };

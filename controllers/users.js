@@ -5,7 +5,7 @@ module.exports.getUsers = (req, res) => {
     .then((users) => {
       res.send(users);
     })
-    .catch((err) => res.status(500).send({ ErrorName: err.name, message: err.message }));
+    .catch((err) => res.status(500).send({ name: err.name, message: err.message }));
 };
 
 module.exports.getUserById = (req, res) => {
@@ -13,12 +13,12 @@ module.exports.getUserById = (req, res) => {
   User.findById(userId)
     .then((user) => {
       if (!user) {
-        res.status(500).send({ ErrorMessage: 'Server-side error' });
+        res.status(500).send({ message: 'Server-side error' });
       }
       res.send(user);
     })
     .catch((err) => {
-      res.status(404).send({ ErrorName: err.name, ErrorMessage: err.message });
+      res.status(404).send({ name: err.name, message: err.message });
     });
 };
 
@@ -28,12 +28,12 @@ module.exports.createUser = (req, res) => {
   User.create({ name, about, avatar })
     .then((user) => {
       if (!user) {
-        res.status(500).send({ ErrorMessage: 'Server-side error' });
+        res.status(500).send({ message: 'Server-side error' });
         return;
       }
       res.send(user);
     })
-    .catch((err) => res.status(400).send({ ErrorName: err.name, ErrorMessage: err.message }));
+    .catch((err) => res.status(400).send({ name: err.name, message: err.message }));
 };
 
 module.exports.updateUser = (req, res) => {
@@ -42,16 +42,16 @@ module.exports.updateUser = (req, res) => {
   User.findByIdAndUpdate(req.user._id, { name, about, avatar })
     .then((user) => {
       if (!name || !about || !avatar) {
-        res.status(400).send({ ErrorMessage: 'Wrong keys or not all fiels are filled out' });
+        res.status(400).send({ message: 'Wrong keys or not all fiels are filled out' });
         return;
       }
       res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(404).send({ ErrorMessage: 'Wrong user ID' });
+        res.status(404).send({ message: 'Wrong user ID' });
       } else {
-        res.status(500).send({ ErrorName: err.name, ErrorMessage: err.message });
+        res.status(500).send({ name: err.name, message: err.message });
       }
     });
 };
@@ -63,16 +63,16 @@ module.exports.updateUserAvatar = (req, res) => {
       if (!avatar) {
         res
           .status(400)
-          .send({ ErrorMessage: 'Wrong "avatar" key or "avatar" key is not filled out' });
+          .send({ message: 'Wrong "avatar" key or "avatar" key is not filled out' });
         return;
       }
       res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(404).send({ ErrorMessage: 'Wrong user ID' });
+        res.status(404).send({ message: 'Wrong user ID' });
       } else {
-        res.status(500).send({ ErrorName: err.name, ErrorMessage: err.message });
+        res.status(500).send({ name: err.name, message: err.message });
       }
     });
 };
