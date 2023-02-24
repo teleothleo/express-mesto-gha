@@ -49,7 +49,9 @@ module.exports.likeCard = (req, res) => {
     .then(() => {
       if (!req.user._id) {
         res.status(400).send({ message: 'Incorrect user data' });
+        return;
       }
+      res.status(200).send({ message: 'Card liked!' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -70,7 +72,9 @@ module.exports.dislikeCard = (req, res) => {
     .then(() => {
       if (!req.user._id) {
         res.status(400).send({ message: 'Incorrect user data' });
+        return;
       }
+      res.status(200).send({ message: 'Card disliked!' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
