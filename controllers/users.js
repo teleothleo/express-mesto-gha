@@ -1,8 +1,6 @@
 const User = require('../models/user');
 
-const ERROR_CODE = 400;
-const ERROR_CODE_NOT_FOUND = 404;
-const ERROR_CODE_SERVER = 500;
+const { ERROR_CODE, ERROR_CODE_NOT_FOUND, ERROR_CODE_SERVER } = require('../utils/constants');
 
 module.exports.getUsers = (req, res) => {
   User.find({})

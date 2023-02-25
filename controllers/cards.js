@@ -1,8 +1,6 @@
 const Card = require('../models/card');
 
-const ERROR_CODE = 400;
-const ERROR_CODE_NOT_FOUND = 404;
-const ERROR_CODE_SERVER = 500;
+const { ERROR_CODE, ERROR_CODE_NOT_FOUND, ERROR_CODE_SERVER } = require('../utils/constants');
 
 module.exports.getCards = (req, res) => {
   console.log(req.body);
@@ -11,7 +9,9 @@ module.exports.getCards = (req, res) => {
       console.log(cards);
       res.send(cards);
     })
-    .catch((err) => res.status(ERROR_CODE_SERVER).send({ name: err.name, message: err.message }));
+    .catch(() => {
+      res.status(ERROR_CODE_SERVER).send({ message: 'Server-side error' });
+    });
 };
 
 module.exports.createCard = (req, res) => {
